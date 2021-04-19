@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: benchmark
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: benchmark
+  serviceName: "benchmark"
+  template:
+    metadata:
+      labels:
+        app: benchmark
+    spec:
+      # Service account is used for SDP only
+      serviceAccount: tp-pravega
+      containers:
+      - name: benchmark
+        image: okashtanov/benchmark-pravega:0.9.0-2766.2515791
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          capabilities:
+            add:
+            - SYS_ADMIN
+          privileged: true
+        resources:
+          limits:
+            cpu: "8"
+            memory: "20Gi"
+          requests:
+            cpu: "4"
+            memory: "5Gi"
+        args: [bash, -c, 'for ((i = 0; ; i++)); do echo "$i: $(date)"; sleep 100; done']
+ 
+        env:
+        - name: pravega_client_auth_method
+          value: Bearer
+        # True for SDP, false for Pravega testing
+        - name: pravega_client_auth_loadDynamic
+          value: "true"

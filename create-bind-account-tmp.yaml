@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: benchmark-account
+  annotations:
+    nautilus.dellemc.com/serviceaccount-secret-name: tp-pravega
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: benchmark-account
+spec:
+  clusterServiceClassExternalName: keycloak-client
+  clusterServicePlanExternalName: service-account
+  parameters:
+    client-id: benchmark-account
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: benchmark-account
+spec:
+  instanceRef:
+    name: benchmark-account

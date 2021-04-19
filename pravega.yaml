@@ -1,0 +1,14 @@
+name: Pravega
+driverClass: io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver
+# Pravega client-specific configuration
+client:
+  controllerURI: tls://pravega-controller.sdp.sdp-demo.org:443
+  scopeName: tp
+writer:
+  enableConnectionPooling: False
+includeTimestampInEvent: True
+enableStreamAutoScaling: False
+enableTransaction: False
+eventsPerSecond: 10000
+deleteStreams: True
+createScope: False

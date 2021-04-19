@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: "tp"
+  labels:
+    webhook-debug: "project-operator"
+---
+apiVersion: "nautilus.dellemc.com/v1alpha1"
+kind: "Project"
+metadata:
+  name: "tp"
+  namespace: "tp"
+spec:
+  zookeeper:
+    size: 3
+  maven:
+    persistentVolumeClaim:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "nfs"
+      resources:
+        requests:
+          storage: 10G
+  storage:
+    persistentVolumeClaim:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs"
+      resources:
+        requests:
+          storage: 10G

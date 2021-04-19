@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prvg-grafana-datasources-config
+data:
+  datasources.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+                "access":"proxy",
+                "name": "pravega-influxdb",
+                "type": "influxdb",
+                "database": "pravega",
+                "editable": true,
+                "url": "http://prvg-influxdb:8086"
+            },
+            {
+                "access":"proxy",
+                "name": "isi-influxdb",
+                "type": "influxdb",
+                "database": "isi_data_insights",
+                "editable": true,
+                "url": "http://prvg-influxdb:8086"
+            },
+            {
+                "access":"proxy",
+                "name": "Prometheus",
+                "editable": true,
+                "type": "prometheus",
+                "url": "http://prvg-prometheus-server"
+            }
+        ]
+    }

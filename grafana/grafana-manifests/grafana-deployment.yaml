@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prvg-grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prvg-grafana
+  template:
+    metadata:
+      name: prvg-grafana
+      labels:
+        app: prvg-grafana
+    spec:
+      containers:
+      - name: prvg-grafana
+        #image: devops-repo.isus.emc.com:8116/nautilus/pravega-grafana:0.10.0-187.9439804
+        imagePullPolicy: IfNotPresent
+        #image: devops-repo.isus.emc.com:8116/okashtanov/grafana-k8s:0.10.0-168.58f8d2c
+        image: okashtanov/grafana:0.10.0-187.9439804
+        env:
+          - name: GF_PATHS_DATA
+            value: "/var/lib/grafana/data"
+        #  - name: GF_AUTH_ANONYMOUS_ENABLED
+        #    value: "true"
+       # - name: GF_INSTALL_PLUGINS
+       #   value: "grafana-kubernetes-app"
+       # - name: GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS
+       #   value: "pravega-monitoring-app,grafana-kubernetes-app"
+       # - name: GF_APP_TLS_SKIP_VERIFY_INSECURE
+       #   value: "true"
+        ports:
+        - name: grafana
+          containerPort: 3000
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+          requests: 
+            memory: "1Gi"
+            cpu: "500m"
+        volumeMounts:
+          - mountPath: /etc/grafana/provisioning/datasources
+            name: grafana-datasources-config
+            readOnly: false
+          - mountPath: /etc/grafana/provisioning/dashboards
+            name: grafana-dashboards-config
+            readOnly: false
+         # - mountPath: /etc/grafana/provisioning/plugins
+         #   name: grafana-plugins-config
+         #   readOnly: false
+          - mountPath: /var/lib/grafana/dashboards
+            name: grafana-dashboards
+            readOnly: false
+         # - mountPath: /var/lib/nautilus/devopsprodigy-kubegraf
+         #   name: grafana-k8s-plugin
+         #   readOnly: false
+         # - mountPath: /etc/ssl/certs
+         #   name: local-ca-certs
+         #   readOnly: true
+      volumes:
+        - name: grafana-datasources-config
+          configMap:
+              defaultMode: 420
+              name: prvg-grafana-datasources-config
+       # - name: grafana-plugins-config
+       #   configMap:
+       #       defaultMode: 420
+       #       name: prvg-grafana-plugins-config
+        - name: grafana-dashboards-config
+          configMap:
+              defaultMode: 420
+              name: prvg-grafana-dashboards-config
+        - name: grafana-dashboards
+          configMap:
+              defaultMode: 420
+              name: custom-dashboards
+       # - name: grafana-k8s-plugin
+       #   hostPath:
+       #       path: ./devopsprodigy-kubegraf-dd00d1b
+       #       type: DirectoryOrCreate
+       # - name: local-ca-certs
+       #   secret:
+       #       secretName: local-ca-certs

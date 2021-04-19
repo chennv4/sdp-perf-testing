@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "false"
+  name: influxdb
+  namespace: default
+spec:
+  rules:
+  - host: influxdb.k8s.local
+    http:
+      paths:
+      - backend:
+          serviceName: prvg-influxdb
+          servicePort: 8086
+        path: /

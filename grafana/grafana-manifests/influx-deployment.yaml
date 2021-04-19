@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prvg-influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prvg-influxdb
+  template:
+    metadata:
+      name: prvg-influxdb
+      labels:
+        app: prvg-influxdb
+    spec:
+      containers:
+      - name: prvg-influxdb
+        imagePullPolicy: IfNotPresent
+        #image: devops-repo.isus.emc.com:8116/nautilus/pravega-influxdb:0.11-dev-030.035df76
+        image: okashtanov/influxdb:0.11-dev-051.450547c
+        ports:
+        - name: influxdb
+          containerPort: 8086
